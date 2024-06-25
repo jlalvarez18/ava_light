@@ -2,6 +2,8 @@ import 'package:ava_light/accounts/models/account.dart';
 import 'package:ava_light/accounts/widgets/accounts_list_card.dart';
 import 'package:ava_light/core/theme/colors.dart';
 import 'package:ava_light/core/ui/spaced_column.dart';
+import 'package:ava_light/credit_factors/models/credit_factor.dart';
+import 'package:ava_light/credit_factors/widgets/credit_factors_list_widget.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
@@ -34,8 +36,56 @@ class Home extends StatelessWidget {
     ),
   ];
 
+  final List<CreditFactor> creditFactors = [
+    CreditFactor(
+      title: "Payment History",
+      value: "100%",
+      impact: CreditImpact.high,
+    ),
+    CreditFactor(
+      title: "Credit Card Utilization",
+      value: "4%",
+      impact: CreditImpact.low,
+    ),
+    CreditFactor(
+      title: "Deragatory Marks",
+      value: "2",
+      impact: CreditImpact.medium,
+    ),
+    CreditFactor(
+      title: "Age of Credit History",
+      value: "1yr 4mo",
+      impact: CreditImpact.low,
+    ),
+    CreditFactor(
+      title: "Hard Inquiries",
+      value: "3",
+      impact: CreditImpact.medium,
+    ),
+    CreditFactor(
+      title: "Total Accounts",
+      value: "9",
+      impact: CreditImpact.medium,
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final List<Widget> sections = [
+      HomeSectionWidget(
+        title: "Credit Factors",
+        children: [
+          CreditFactorsListWidget(factors: creditFactors),
+        ],
+      ),
+      HomeSectionWidget(
+        title: "Open Credit Card Accounts",
+        children: [
+          AccountsListCard(accounts: accounts),
+        ],
+      ),
+    ];
+
     return Container(
       color: Color.fromRGBO(242, 240, 237, 1),
       child: CustomScrollView(
@@ -55,14 +105,9 @@ class Home extends StatelessWidget {
           SliverPadding(
             padding: const EdgeInsets.all(16.0),
             sliver: SliverList.builder(
-              itemCount: 1,
+              itemCount: sections.length,
               itemBuilder: (context, index) {
-                return HomeSectionWidget(
-                  title: "Open Credit Card Accounts",
-                  children: [
-                    AccountsListCard(accounts: accounts),
-                  ],
-                );
+                return sections[index];
               },
             ),
           )
@@ -84,20 +129,31 @@ class HomeSectionWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
-    return SpacedColumn(
-      spacing: 12,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          title,
-          style: textTheme.headlineMedium,
-          textAlign: TextAlign.left,
-        ),
-        SpacedColumn(
-          spacing: 34,
-          children: children,
-        )
-      ],
+    final titleStyle = textTheme.headlineMedium?.copyWith(
+      fontSize: 22,
+      fontWeight: FontWeight.w600,
+    );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: SpacedColumn(
+        spacing: 12,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(
+              title,
+              style: titleStyle,
+              textAlign: TextAlign.left,
+            ),
+          ),
+          SpacedColumn(
+            spacing: 34,
+            children: children,
+          )
+        ],
+      ),
     );
   }
 }
