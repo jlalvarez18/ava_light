@@ -2,8 +2,13 @@ import 'package:ava_light/core/theme/colors.dart';
 import 'package:flutter/material.dart';
 
 class CardWidget extends StatelessWidget {
-  const CardWidget({super.key, required this.child});
+  const CardWidget({
+    super.key,
+    required this.child,
+    this.padding = const EdgeInsets.all(20),
+  });
 
+  final EdgeInsets padding;
   final Widget child;
 
   @override
@@ -17,7 +22,7 @@ class CardWidget extends StatelessWidget {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: padding,
         child: child,
       ),
     );

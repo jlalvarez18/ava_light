@@ -55,7 +55,10 @@ class CreditFactorCardWidget extends StatelessWidget {
       width: 144,
       height: 160,
       child: CardWidget(
+        padding: EdgeInsets.only(top: 24, bottom: 16, left: 16, right: 16),
         child: SpacedColumn(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 8,
           children: [
             Text(

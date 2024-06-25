@@ -38,8 +38,12 @@ class Home extends ConsumerWidget {
             pinned: true,
             expandedHeight: 100,
             backgroundColor: AvaColors.purple,
+            foregroundColor: Colors.white,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text("Home"),
+              title: Text(
+                "Home",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             leading: IconButton(
               onPressed: () {},

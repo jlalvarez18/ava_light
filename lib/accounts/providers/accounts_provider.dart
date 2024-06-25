@@ -1,4 +1,6 @@
 import 'package:ava_light/accounts/models/account.dart';
+import 'package:ava_light/core/app_config.dart';
+import 'package:money2/money2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'accounts_provider.g.dart';
@@ -31,4 +33,28 @@ List<Account> getAllAccounts(GetAllAccountsRef ref) {
       dateLastReported: DateTime(2024, 6, 24),
     ),
   ];
+}
+
+@riverpod
+Money totalAccountBalance(TotalAccountBalanceRef ref) {
+  final accounts = ref.watch(getAllAccountsProvider);
+
+  int total = accounts.fold(
+    0,
+    (previousValue, account) => previousValue + account.balanceInCents,
+  );
+
+  return Money.fromIntWithCurrency(total, AppConfig.currency);
+}
+
+@riverpod
+Money totalAccountLimit(TotalAccountLimitRef ref) {
+  final accounts = ref.watch(getAllAccountsProvider);
+
+  int total = accounts.fold(
+    0,
+    (previousValue, account) => previousValue + account.limitInCents,
+  );
+
+  return Money.fromIntWithCurrency(total, AppConfig.currency);
 }
