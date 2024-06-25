@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:after_layout/after_layout.dart';
 import 'package:ava_light/accounts/models/account.dart';
 import 'package:ava_light/core/theme/colors.dart';
 import 'package:ava_light/core/ui/spaced_column.dart';
@@ -33,10 +36,17 @@ class AccountsListCard extends StatelessWidget {
   }
 }
 
-class AccountWidget extends StatelessWidget {
+class AccountWidget extends StatefulWidget {
   const AccountWidget({super.key, required this.account});
 
   final Account account;
+
+  @override
+  State<AccountWidget> createState() => _AccountWidgetState();
+}
+
+class _AccountWidgetState extends State<AccountWidget> with AfterLayoutMixin {
+  double progressValue = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -53,30 +63,44 @@ class AccountWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(account.name, style: textTheme.titleLarge),
-            Text(percentFormatter.format(account.usagePercentage),
+            Text(widget.account.name, style: textTheme.titleLarge),
+            Text(percentFormatter.format(widget.account.usagePercentage),
                 style: textTheme.titleLarge),
           ],
         ),
-        LinearProgressIndicator(
-          value: account.usagePercentage,
-          minHeight: 8,
-          borderRadius: BorderRadius.circular(999),
-          valueColor: AlwaysStoppedAnimation(AvaColors.green),
+        TweenAnimationBuilder<double>(
+          tween: Tween(begin: 0, end: widget.account.usagePercentage),
+          duration: Duration(seconds: 1),
+          builder: (context, value, child) {
+            return LinearProgressIndicator(
+              value: value,
+              minHeight: 8,
+              borderRadius: BorderRadius.circular(999),
+              valueColor: AlwaysStoppedAnimation(AvaColors.green),
+            );
+          },
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(account.balance.toString(), style: textTheme.titleMedium),
-            Text("${account.limit.toString()} Limit",
+            Text(widget.account.balance.toString(),
+                style: textTheme.titleMedium),
+            Text("${widget.account.limit.toString()} Limit",
                 style: textTheme.titleMedium),
           ],
         ),
         Text(
-          "Reported on ${dateFormatter.format(account.dateLastReported)}",
+          "Reported on ${dateFormatter.format(widget.account.dateLastReported)}",
           style: textTheme.labelSmall,
         ),
       ],
     );
+  }
+
+  @override
+  FutureOr<void> afterFirstLayout(BuildContext context) {
+    // setState(() {
+    //   progressValue = widget.account.usagePercentage;
+    // });
   }
 }

@@ -1,76 +1,20 @@
-import 'package:ava_light/accounts/models/account.dart';
+import 'package:ava_light/accounts/providers/accounts_provider.dart';
 import 'package:ava_light/accounts/widgets/accounts_list_card.dart';
 import 'package:ava_light/core/theme/colors.dart';
 import 'package:ava_light/core/ui/spaced_column.dart';
-import 'package:ava_light/credit_factors/models/credit_factor.dart';
+import 'package:ava_light/credit_factors/providers/credit_factors_provider.dart';
 import 'package:ava_light/credit_factors/widgets/credit_factors_list_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Home extends StatelessWidget {
+class Home extends ConsumerWidget {
   Home({super.key});
 
-  final List<Account> accounts = [
-    Account(
-      uid: "Amazon Credit Card",
-      dateAdded: DateTime(2023, 6, 20),
-      name: "Amazon Credit Card",
-      balanceInCents: 120000,
-      limitInCents: 900000,
-      dateLastReported: DateTime(2024, 6, 24),
-    ),
-    Account(
-      uid: "Capital One Quicksilver",
-      dateAdded: DateTime(2023, 6, 21),
-      name: "Capital One Quicksilver",
-      balanceInCents: 200000,
-      limitInCents: 1000000,
-      dateLastReported: DateTime(2024, 6, 24),
-    ),
-    Account(
-      uid: "Apple Card",
-      dateAdded: DateTime(2023, 6, 23),
-      name: "Apple Card",
-      balanceInCents: 200000,
-      limitInCents: 500000,
-      dateLastReported: DateTime(2024, 6, 24),
-    ),
-  ];
-
-  final List<CreditFactor> creditFactors = [
-    CreditFactor(
-      title: "Payment History",
-      value: "100%",
-      impact: CreditImpact.high,
-    ),
-    CreditFactor(
-      title: "Credit Card Utilization",
-      value: "4%",
-      impact: CreditImpact.low,
-    ),
-    CreditFactor(
-      title: "Deragatory Marks",
-      value: "2",
-      impact: CreditImpact.medium,
-    ),
-    CreditFactor(
-      title: "Age of Credit History",
-      value: "1yr 4mo",
-      impact: CreditImpact.low,
-    ),
-    CreditFactor(
-      title: "Hard Inquiries",
-      value: "3",
-      impact: CreditImpact.medium,
-    ),
-    CreditFactor(
-      title: "Total Accounts",
-      value: "9",
-      impact: CreditImpact.medium,
-    ),
-  ];
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final accounts = ref.watch(getAllAccountsProvider);
+    final creditFactors = ref.watch(allCreditFactorsProvider);
+
     final List<Widget> sections = [
       HomeSectionWidget(
         title: "Credit Factors",

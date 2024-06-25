@@ -55,25 +55,21 @@ class CreditFactorCardWidget extends StatelessWidget {
       width: 144,
       height: 160,
       child: CardWidget(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: SpacedColumn(
+          spacing: 8,
           children: [
-            SpacedColumn(
-              spacing: 8,
-              children: [
-                Text(
-                  factor.title,
-                  style: titleStyle,
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  factor.value,
-                  style: valueStyle,
-                  textAlign: TextAlign.center,
-                ),
-              ],
+            Text(
+              factor.title,
+              style: titleStyle,
+              textAlign: TextAlign.center,
             ),
-            Spacer(),
+            Expanded(
+              child: Text(
+                factor.value,
+                style: valueStyle,
+                textAlign: TextAlign.center,
+              ),
+            ),
             CreditImpactWidget(impact: factor.impact)
           ],
         ),
