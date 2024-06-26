@@ -23,6 +23,22 @@ final getExperianReportsProvider =
 );
 
 typedef GetExperianReportsRef = AutoDisposeProviderRef<List<CreditReport>>;
+String _$latestExperianReportHash() =>
+    r'7ccf6ceb5e060da0fe7b68bc5153b13d52cf8fdf';
+
+/// See also [latestExperianReport].
+@ProviderFor(latestExperianReport)
+final latestExperianReportProvider = AutoDisposeProvider<CreditReport>.internal(
+  latestExperianReport,
+  name: r'latestExperianReportProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$latestExperianReportHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef LatestExperianReportRef = AutoDisposeProviderRef<CreditReport>;
 String _$minExperianScoreHash() => r'ba83236a9703855f1e1138741133c8abcbf7c3ce';
 
 /// See also [minExperianScore].

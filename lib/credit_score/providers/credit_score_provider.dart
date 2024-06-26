@@ -69,6 +69,13 @@ List<CreditReport> getExperianReports(GetExperianReportsRef ref) {
   ];
 }
 
+@riverpod
+CreditReport latestExperianReport(LatestExperianReportRef ref) {
+  final reports = ref.watch(getExperianReportsProvider);
+
+  return reports[0];
+}
+
 int _kMaxCreditScore = 850;
 int _kMinCreditScore = 850;
 

@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+const int kMaxScoreRating = 850;
+
 @immutable
 final class CreditReport {
   final DateTime dateReported;

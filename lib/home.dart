@@ -4,6 +4,8 @@ import 'package:ava_light/core/theme/colors.dart';
 import 'package:ava_light/core/ui/spaced_column.dart';
 import 'package:ava_light/credit_factors/providers/credit_factors_provider.dart';
 import 'package:ava_light/credit_factors/widgets/credit_factors_list_widget.dart';
+import 'package:ava_light/credit_score/providers/credit_score_provider.dart';
+import 'package:ava_light/credit_score/widgets/credit_score_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +16,7 @@ class Home extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final accounts = ref.watch(getAllAccountsProvider);
     final creditFactors = ref.watch(allCreditFactorsProvider);
+    final latestReport = ref.watch(latestExperianReportProvider);
 
     final List<Widget> sections = [
       HomeSectionWidget(
@@ -35,14 +38,19 @@ class Home extends ConsumerWidget {
       child: CustomScrollView(
         slivers: [
           SliverAppBar(
-            pinned: true,
-            expandedHeight: 100,
             backgroundColor: AvaColors.purple,
             foregroundColor: Colors.white,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                "Home",
-                style: TextStyle(color: Colors.white),
+            title: Text("Home"),
+            bottom: PreferredSize(
+              preferredSize: Size(0, 140),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                  bottom: 24,
+                  top: 10,
+                ),
+                child: CreditScoreHeader(report: latestReport),
               ),
             ),
             leading: IconButton(

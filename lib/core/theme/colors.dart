@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 final class AvaColors {
+  AvaColors._();
+
   static final Color cardColor = Color.fromRGBO(255, 255, 255, 1.0);
   static final Color cardBorderColor = Color.fromRGBO(0, 0, 0, 0.15);
 
