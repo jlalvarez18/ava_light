@@ -79,19 +79,56 @@ class _ChartWidget extends StatefulWidget {
 }
 
 class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
-  List<LineChartBarData> barData = [];
+  late Iterator<CreditReport> reversedReports;
+  late Timer timer;
+
+  List<FlSpot> spots = [];
+  int x = 1;
+
+  @override
+  void initState() {
+    super.initState();
+
+    reversedReports = widget.reports.reversed.iterator;
+    addNextSpot();
+  }
+
+  @override
+  void dispose() {
+    timer.cancel();
+
+    super.dispose();
+  }
+
+  void addNextSpot() {
+    if (!reversedReports.moveNext()) {
+      return;
+    }
+
+    final report = reversedReports.current;
+    final y = report.score;
+
+    setState(() {
+      spots.add(FlSpot(x.toDouble(), y.toDouble()));
+    });
+
+    x += 1;
+  }
 
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) {
-    final newBarData = loadBarData();
-
-    setState(() {
-      barData = newBarData;
-    });
+    timer = Timer.periodic(
+      Duration(milliseconds: 40),
+      (timer) {
+        addNextSpot();
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final barData = loadBarData();
+
     final data = LineChartData(
       lineTouchData: touchData,
       gridData: FlGridData(
@@ -124,7 +161,11 @@ class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
         Text(widget.reports.first.agency.string, style: titleStyle),
         SizedBox(
           height: 100,
-          child: LineChart(data),
+          child: LineChart(
+            data,
+            duration: Duration(seconds: 1),
+            curve: Curves.bounceInOut,
+          ),
         ),
       ],
     );
@@ -153,19 +194,6 @@ class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
   }
 
   List<LineChartBarData> loadBarData() {
-    final reversedReports = widget.reports.reversed.toList();
-
-    List<FlSpot> spots = [];
-
-    for (int i = 0; i < reversedReports.length; i++) {
-      final report = reversedReports[i];
-
-      final x = i + 1;
-      final y = report.score;
-
-      spots.add(FlSpot(x.toDouble(), y.toDouble()));
-    }
-
     return [
       LineChartBarData(
         isCurved: true,
