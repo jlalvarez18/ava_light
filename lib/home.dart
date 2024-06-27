@@ -6,6 +6,7 @@ import 'package:ava_light/credit_factors/providers/credit_factors_provider.dart'
 import 'package:ava_light/credit_factors/widgets/credit_factors_list_widget.dart';
 import 'package:ava_light/credit_score/providers/credit_score_provider.dart';
 import 'package:ava_light/credit_score/widgets/credit_score_header.dart';
+import 'package:ava_light/credit_score/widgets/credit_score_home_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,6 +20,12 @@ class Home extends ConsumerWidget {
     final latestReport = ref.watch(latestExperianReportProvider);
 
     final List<Widget> sections = [
+      HomeSectionWidget(
+        title: "Chart",
+        children: [
+          CreditScoreHomeWidget(),
+        ],
+      ),
       HomeSectionWidget(
         title: "Credit Factors",
         children: [
