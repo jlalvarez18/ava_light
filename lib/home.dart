@@ -7,6 +7,7 @@ import 'package:ava_light/credit_factors/widgets/credit_factors_list_widget.dart
 import 'package:ava_light/credit_score/providers/credit_score_provider.dart';
 import 'package:ava_light/credit_score/widgets/credit_score_header.dart';
 import 'package:ava_light/credit_score/widgets/credit_score_home_widget.dart';
+import 'package:ava_light/utilization/credit_utilization_home_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,6 +31,12 @@ class Home extends ConsumerWidget {
         title: "Credit Factors",
         children: [
           CreditFactorsListWidget(factors: creditFactors),
+        ],
+      ),
+      HomeSectionWidget(
+        title: "Account Details",
+        children: [
+          CreditUtilizationHomeWidget(),
         ],
       ),
       HomeSectionWidget(

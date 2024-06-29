@@ -1,7 +1,7 @@
 import 'package:ava_light/core/theme/colors.dart';
 import 'package:ava_light/core/ui/spaced_column.dart';
+import 'package:ava_light/core/widgets/circular_progress_widget.dart';
 import 'package:ava_light/credit_score/models/credit_score.dart';
-import 'package:dashed_circular_progress_bar/dashed_circular_progress_bar.dart';
 import 'package:flutter/material.dart';
 
 class CreditScoreHeader extends StatelessWidget {
@@ -58,58 +58,13 @@ class CreditScoreHeader extends StatelessWidget {
                 Text(report.agency.string, style: agencyStyle),
               ],
             ),
-            _CreditScoreWidget(report: report),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _CreditScoreWidget extends StatelessWidget {
-  const _CreditScoreWidget({super.key, required this.report});
-
-  final CreditReport report;
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
-    final scoreStyle = textTheme.titleLarge?.copyWith(
-      fontWeight: FontWeight.w600,
-      fontSize: 27,
-      color: Color.fromRGBO(42, 30, 57, 1),
-    );
-
-    final ratingStyle = textTheme.titleLarge?.copyWith(
-      fontWeight: FontWeight.w600,
-      fontSize: 12,
-      color: Color.fromRGBO(42, 30, 57, 1),
-    );
-
-    return SizedBox(
-      height: 90,
-      child: DashedCircularProgressBar.aspectRatio(
-        aspectRatio: 1.0,
-        startAngle: 180,
-        corners: StrokeCap.butt,
-        animation: true,
-        progress: report.score.toDouble(),
-        maxProgress: kMaxScoreRating.toDouble(),
-        foregroundStrokeWidth: 10,
-        backgroundStrokeWidth: 10,
-        foregroundColor: Color.fromRGBO(72, 163, 136, 1),
-        backgroundColor: Color.fromRGBO(169, 234, 206, 1),
-        child: Center(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(report.score.toString(), style: scoreStyle),
-                Text(report.rating.string, style: ratingStyle),
-              ],
+            CircularProgressWidget(
+              progressValue: report.score.toDouble(),
+              title: report.score.toString(),
+              subtitle: report.rating.string,
+              maxValue: kMaxScoreRating.toDouble(),
             ),
-          ),
+          ],
         ),
       ),
     );

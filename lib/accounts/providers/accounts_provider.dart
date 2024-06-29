@@ -1,5 +1,6 @@
 import 'package:ava_light/accounts/models/account.dart';
 import 'package:ava_light/core/app_config.dart';
+import 'package:ava_light/utilization/models/credit_utilization_report.dart';
 import 'package:money2/money2.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -57,4 +58,15 @@ Money totalAccountLimit(TotalAccountLimitRef ref) {
   );
 
   return Money.fromIntWithCurrency(total, AppConfig.currency);
+}
+
+@riverpod
+CreditUtilizationReport creditUtilizationReport(
+    CreditUtilizationReportRef ref) {
+  final balance = ref.watch(totalAccountBalanceProvider);
+  final limit = ref.watch(totalAccountLimitProvider);
+
+  final ratio = balance.minorUnits / limit.minorUnits;
+
+  return CreditUtilizationReport(ratio: ratio);
 }

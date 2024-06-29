@@ -52,5 +52,23 @@ final totalAccountLimitProvider = AutoDisposeProvider<Money>.internal(
 );
 
 typedef TotalAccountLimitRef = AutoDisposeProviderRef<Money>;
+String _$creditUtilizationReportHash() =>
+    r'e72f44dd8d63dd16fe1a5f9d30fc983cc1cd3635';
+
+/// See also [creditUtilizationReport].
+@ProviderFor(creditUtilizationReport)
+final creditUtilizationReportProvider =
+    AutoDisposeProvider<CreditUtilizationReport>.internal(
+  creditUtilizationReport,
+  name: r'creditUtilizationReportProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$creditUtilizationReportHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef CreditUtilizationReportRef
+    = AutoDisposeProviderRef<CreditUtilizationReport>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
