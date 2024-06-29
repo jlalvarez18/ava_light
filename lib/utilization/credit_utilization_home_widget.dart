@@ -60,21 +60,30 @@ class _CreditUtilizationHomeWidgetState
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: SpacedColumn(
-                    spacing: 6,
+                    spacing: 10,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      AutoSizeText(
-                        "Total Balance: ${totalBalance.toString()}",
-                        style: titleStyle,
-                        maxLines: 1,
-                      ),
                       Text(
-                        "Total Limit: ${totalLimit.toString()}",
-                        style: subtitleStyle,
+                        "Total Credit Utilization",
+                        style: titleStyle,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AutoSizeText(
+                            "Total Balance: ${totalBalance.toString()}",
+                            style: subtitleStyle,
+                            maxLines: 1,
+                          ),
+                          Text(
+                            "Total Limit: ${totalLimit.toString()}",
+                            style: subtitleStyle,
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -84,6 +93,7 @@ class _CreditUtilizationHomeWidgetState
                   maxValue: 1.0,
                   title: percentFormatter.format(utilizationReport.ratio),
                   subtitle: utilizationReport.grade.stringValue,
+                  style: CircularProgressStyle.semi,
                 ),
               ],
             ),
