@@ -53,7 +53,7 @@ final totalAccountLimitProvider = AutoDisposeProvider<Money>.internal(
 
 typedef TotalAccountLimitRef = AutoDisposeProviderRef<Money>;
 String _$creditUtilizationReportHash() =>
-    r'e72f44dd8d63dd16fe1a5f9d30fc983cc1cd3635';
+    r'fc9ef303d9e17d6437ba4bbf477f9d6d53a6fba1';
 
 /// See also [creditUtilizationReport].
 @ProviderFor(creditUtilizationReport)

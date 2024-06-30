@@ -16,7 +16,9 @@ class CreditScoreHomeWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final reports = ref.watch(getExperianReportsProvider);
+    final reports = ref.watch(GetSortedExperianReportsProvider());
+    final minScore = ref.watch(minReportedExperianScoreProvider);
+    final maxScore = ref.watch(maxReportedExperianScoreProvider);
 
     final nextDate = DateTime.now().add(
       Duration(days: 30),
@@ -27,7 +29,11 @@ class CreditScoreHomeWidget extends ConsumerWidget {
         spacing: 20,
         children: [
           _HeaderWidget(nextDateCheck: nextDate),
-          _ChartWidget(reports: reports),
+          _ChartWidget(
+            reports: reports,
+            minY: minScore.toDouble(),
+            maxY: maxScore.toDouble(),
+          ),
           _FooterWidget(),
         ],
       ),
@@ -70,28 +76,33 @@ class _HeaderWidget extends StatelessWidget {
 }
 
 class _ChartWidget extends StatefulWidget {
-  _ChartWidget({super.key, required this.reports});
+  _ChartWidget(
+      {super.key,
+      required this.reports,
+      required this.minY,
+      required this.maxY});
 
   final List<CreditReport> reports;
+  final double minY;
+  final double maxY;
 
   @override
   State<_ChartWidget> createState() => _ChartWidgetState();
 }
 
 class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
-  late Iterator<CreditReport> reversedReports;
-
   List<FlSpot> spots = [];
   int x = 1;
 
-  final double minY = 600;
-  final double maxY = 700;
+  late double minY;
+  late double maxY;
 
   @override
   void initState() {
     super.initState();
 
-    reversedReports = widget.reports.reversed.iterator;
+    minY = widget.minY;
+    maxY = widget.maxY;
 
     for (int i = 0; i < widget.reports.length; i++) {
       final x = i + 1;
@@ -102,7 +113,7 @@ class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
 
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) {
-    final reports = widget.reports.reversed.toList();
+    final reports = widget.reports;
 
     final List<FlSpot> newSpots = [];
 
@@ -131,7 +142,11 @@ class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
         drawVerticalLine: false,
         horizontalInterval: 1,
         checkToShowHorizontalLine: (value) {
-          return value == 601 || value == 650 || value == 699;
+          if (value == (minY + 1)) {
+            return true;
+          }
+
+          return (value % 50 == 0);
         },
       ),
       titlesData: getTitlesData(context),
@@ -177,7 +192,7 @@ class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
       topTitles: disabled,
       leftTitles: AxisTitles(
         sideTitles: SideTitles(
-          reservedSize: 44,
+          reservedSize: 40,
           getTitlesWidget: (value, meta) {
             return getLeftTitleWidget(context, value, meta);
           },
@@ -220,17 +235,10 @@ class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
         );
 
     String text;
-    switch (value.toInt()) {
-      case 700:
-        text = '700';
-      case 650:
-        text = '650';
-      case 600:
-        text = '600';
-      case 550:
-        text = '550';
-      default:
-        return Container();
+    if (value % 50 == 0) {
+      text = value.toStringAsFixed(0);
+    } else {
+      return Container();
     }
 
     return Text(text, style: style, textAlign: TextAlign.center);

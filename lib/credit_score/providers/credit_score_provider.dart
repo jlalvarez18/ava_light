@@ -1,3 +1,4 @@
+import 'package:ava_light/core/extensions/list_extensions.dart';
 import 'package:ava_light/credit_score/models/credit_score.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -5,7 +6,7 @@ part 'credit_score_provider.g.dart';
 
 @riverpod
 List<CreditReport> getExperianReports(GetExperianReportsRef ref) {
-  return [
+  final reports = [
     CreditReport(
       dateReported: DateTime(2024, 6, 1),
       score: 690,
@@ -53,7 +54,7 @@ List<CreditReport> getExperianReports(GetExperianReportsRef ref) {
     ),
     CreditReport(
       dateReported: DateTime(2023, 10, 1),
-      score: 600,
+      score: 550,
       agency: CreditReportAgency.experian,
     ),
     CreditReport(
@@ -67,32 +68,57 @@ List<CreditReport> getExperianReports(GetExperianReportsRef ref) {
       agency: CreditReportAgency.experian,
     ),
   ];
+
+  return reports;
+}
+
+@riverpod
+List<CreditReport> getSortedExperianReports(GetSortedExperianReportsRef ref,
+    {bool ascending = true}) {
+  final reports = ref.watch(getExperianReportsProvider);
+
+  final sorted = reports.sortedBy(
+    compare: (a, b) {
+      var value = a.dateReported.compareTo(b.dateReported);
+
+      if (!ascending && value != 0) {
+        value = -value;
+      }
+
+      return value;
+    },
+  );
+
+  return sorted;
 }
 
 @riverpod
 CreditReport latestExperianReport(LatestExperianReportRef ref) {
-  final reports = ref.watch(getExperianReportsProvider);
+  final reports = ref.watch(getSortedExperianReportsProvider(ascending: false));
 
   return reports[0];
 }
 
+// source: https://www.capitalone.com/learn-grow/money-management/lowest-credit-score/
 int _kMaxCreditScore = 850;
-int _kMinCreditScore = 850;
+int _kMinCreditScore = 300;
 
 @riverpod
-int minExperianScore(MinExperianScoreRef ref) {
-  final reports = ref.watch(getExperianReportsProvider);
+int minReportedExperianScore(MinReportedExperianScoreRef ref) {
+  final reports = ref.watch(getSortedExperianReportsProvider());
 
-  reports.sort();
+  final sorted =
+      reports.sortedBy(compare: (a, b) => a.score.compareTo(b.score));
 
-  return reports.firstOrNull?.score ?? _kMinCreditScore;
+  return sorted.firstOrNull?.score ?? _kMinCreditScore;
 }
 
 @riverpod
-int maxExperianScore(MaxExperianScoreRef ref) {
-  final reports = ref.watch(getExperianReportsProvider);
+int maxReportedExperianScore(MaxReportedExperianScoreRef ref) {
+  final reports = ref.watch(getSortedExperianReportsProvider());
 
-  reports.sort();
+  final sorted =
+      reports.sortedBy(compare: (a, b) => a.score.compareTo(b.score));
 
-  return reports.lastOrNull?.score ?? _kMaxCreditScore;
+  return sorted.lastOrNull?.score ?? _kMaxCreditScore;
 }
