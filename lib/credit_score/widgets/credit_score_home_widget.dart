@@ -80,7 +80,6 @@ class _ChartWidget extends StatefulWidget {
 
 class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
   late Iterator<CreditReport> reversedReports;
-  late Timer timer;
 
   List<FlSpot> spots = [];
   int x = 1;
@@ -99,13 +98,6 @@ class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
 
       spots.add(FlSpot(x.toDouble(), minY));
     }
-  }
-
-  @override
-  void dispose() {
-    timer.cancel();
-
-    super.dispose();
   }
 
   @override

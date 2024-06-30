@@ -1,9 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ava_light/accounts/providers/accounts_provider.dart';
+import 'package:ava_light/core/theme/colors.dart';
 import 'package:ava_light/core/ui/spaced_column.dart';
+import 'package:ava_light/core/ui/spaced_row.dart';
 import 'package:ava_light/core/widgets/card_widget.dart';
 import 'package:ava_light/core/widgets/circular_progress_widget.dart';
-import 'package:ava_light/utilization/models/credit_utilization_report.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -56,48 +57,53 @@ class _CreditUtilizationHomeWidgetState
       },
       child: CardWidget(
         child: SpacedColumn(
+          spacing: 12,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            Text(
+              "Total Credit Utilization",
+              style: titleStyle,
+            ),
+            CircularProgressWidget(
+              progressValue: progressValue,
+              maxValue: 1.0,
+              title: percentFormatter.format(utilizationReport.ratio),
+              subtitle: utilizationReport.grade.stringValue,
+              style: CircularProgressStyle.semi,
+            ),
+            Column(
               children: [
-                Expanded(
-                  child: SpacedColumn(
-                    spacing: 10,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Total Credit Utilization",
-                        style: titleStyle,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AutoSizeText(
-                            "Total Balance: ${totalBalance.toString()}",
-                            style: subtitleStyle,
-                            maxLines: 1,
-                          ),
-                          Text(
-                            "Total Limit: ${totalLimit.toString()}",
-                            style: subtitleStyle,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                Text(
+                  "How is this calculated?",
+                  style: textTheme.titleMedium,
+                  textAlign: TextAlign.center,
                 ),
-                CircularProgressWidget(
-                  progressValue: progressValue,
-                  maxValue: 1.0,
-                  title: percentFormatter.format(utilizationReport.ratio),
-                  subtitle: utilizationReport.grade.stringValue,
-                  style: CircularProgressStyle.semi,
+                Text(
+                  "Your credit card utilization is found by dividing your total credit card balance by your total credit card limit.",
+                  style: textTheme.labelMedium,
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
-            // UtilizationGradeBar(),
+            SpacedRow(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: ValueCard(
+                    title: "Total Balance",
+                    subtitle: totalBalance.toString(),
+                  ),
+                ),
+                Text("÷", style: textTheme.titleLarge),
+                Expanded(
+                  child: ValueCard(
+                    title: "Total Limit",
+                    subtitle: totalLimit.toString(),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -105,30 +111,51 @@ class _CreditUtilizationHomeWidgetState
   }
 }
 
-class UtilizationGradeBar extends StatelessWidget {
-  const UtilizationGradeBar({super.key});
+class ValueCard extends StatelessWidget {
+  const ValueCard({super.key, required this.title, required this.subtitle});
+
+  final String title;
+  final String subtitle;
 
   @override
   Widget build(BuildContext context) {
-    final grades = UtilizationGrade.values
-        .where(
-          (element) => element != UtilizationGrade.unknown,
-        )
-        .toList()
-        .reversed;
+    final textTheme = Theme.of(context).textTheme;
 
-    return SizedBox(
-      height: 30,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [for (var grade in grades) Expanded(child: createBar(grade))],
-      ),
+    final titleStyle = textTheme.labelLarge?.copyWith(
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
     );
-  }
 
-  Widget createBar(UtilizationGrade grade) {
+    final subtitleStyle = textTheme.labelLarge?.copyWith(
+      fontSize: 22,
+      fontWeight: FontWeight.w600,
+      color: AvaColors.purple,
+    );
+
     return Container(
-      color: grade.colorValue,
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(9),
+          side: BorderSide(color: AvaColors.cardBorderColor),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            AutoSizeText(
+              title,
+              style: titleStyle,
+              maxLines: 1,
+            ),
+            AutoSizeText(
+              subtitle,
+              style: subtitleStyle,
+              maxLines: 1,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
