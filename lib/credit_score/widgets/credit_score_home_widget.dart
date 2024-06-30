@@ -85,12 +85,20 @@ class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
   List<FlSpot> spots = [];
   int x = 1;
 
+  final double minY = 600;
+  final double maxY = 700;
+
   @override
   void initState() {
     super.initState();
 
     reversedReports = widget.reports.reversed.iterator;
-    addNextSpot();
+
+    for (int i = 0; i < widget.reports.length; i++) {
+      final x = i + 1;
+
+      spots.add(FlSpot(x.toDouble(), minY));
+    }
   }
 
   @override
@@ -100,29 +108,24 @@ class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
     super.dispose();
   }
 
-  void addNextSpot() {
-    if (!reversedReports.moveNext()) {
-      return;
-    }
-
-    final report = reversedReports.current;
-    final y = report.score;
-
-    setState(() {
-      spots.add(FlSpot(x.toDouble(), y.toDouble()));
-    });
-
-    x += 1;
-  }
-
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) {
-    timer = Timer.periodic(
-      Duration(milliseconds: 40),
-      (timer) {
-        addNextSpot();
-      },
-    );
+    final reports = widget.reports.reversed.toList();
+
+    final List<FlSpot> newSpots = [];
+
+    for (int i = 0; i < reports.length; i++) {
+      final report = reports[i];
+
+      final x = i + 1;
+      final y = report.score;
+
+      newSpots.add(FlSpot(x.toDouble(), y.toDouble()));
+    }
+
+    setState(() {
+      spots = newSpots;
+    });
   }
 
   @override
@@ -144,8 +147,8 @@ class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
       lineBarsData: barData,
       minX: 1,
       maxX: 12,
-      minY: 600,
-      maxY: 700,
+      minY: minY,
+      maxY: maxY,
     );
 
     final titleStyle = Theme.of(context).textTheme.labelLarge?.copyWith(
@@ -164,7 +167,7 @@ class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
           child: LineChart(
             data,
             duration: Duration(seconds: 1),
-            curve: Curves.bounceInOut,
+            curve: Curves.easeInOut,
           ),
         ),
       ],
