@@ -24,7 +24,7 @@ final getExperianReportsProvider =
 
 typedef GetExperianReportsRef = AutoDisposeProviderRef<List<CreditReport>>;
 String _$getSortedExperianReportsHash() =>
-    r'c39e369df4fc159dc30c15a7fb2d984aa9532105';
+    r'c2d54513598965bf4b0bd00cd751722570ca4109';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -59,9 +59,11 @@ class GetSortedExperianReportsFamily extends Family<List<CreditReport>> {
   /// See also [getSortedExperianReports].
   GetSortedExperianReportsProvider call({
     bool ascending = true,
+    int limit = 12,
   }) {
     return GetSortedExperianReportsProvider(
       ascending: ascending,
+      limit: limit,
     );
   }
 
@@ -71,6 +73,7 @@ class GetSortedExperianReportsFamily extends Family<List<CreditReport>> {
   ) {
     return call(
       ascending: provider.ascending,
+      limit: provider.limit,
     );
   }
 
@@ -95,10 +98,12 @@ class GetSortedExperianReportsProvider
   /// See also [getSortedExperianReports].
   GetSortedExperianReportsProvider({
     bool ascending = true,
+    int limit = 12,
   }) : this._internal(
           (ref) => getSortedExperianReports(
             ref as GetSortedExperianReportsRef,
             ascending: ascending,
+            limit: limit,
           ),
           from: getSortedExperianReportsProvider,
           name: r'getSortedExperianReportsProvider',
@@ -110,6 +115,7 @@ class GetSortedExperianReportsProvider
           allTransitiveDependencies:
               GetSortedExperianReportsFamily._allTransitiveDependencies,
           ascending: ascending,
+          limit: limit,
         );
 
   GetSortedExperianReportsProvider._internal(
@@ -120,9 +126,11 @@ class GetSortedExperianReportsProvider
     required super.debugGetCreateSourceHash,
     required super.from,
     required this.ascending,
+    required this.limit,
   }) : super.internal();
 
   final bool ascending;
+  final int limit;
 
   @override
   Override overrideWith(
@@ -138,6 +146,7 @@ class GetSortedExperianReportsProvider
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
         ascending: ascending,
+        limit: limit,
       ),
     );
   }
@@ -150,13 +159,15 @@ class GetSortedExperianReportsProvider
   @override
   bool operator ==(Object other) {
     return other is GetSortedExperianReportsProvider &&
-        other.ascending == ascending;
+        other.ascending == ascending &&
+        other.limit == limit;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
     hash = _SystemHash.combine(hash, ascending.hashCode);
+    hash = _SystemHash.combine(hash, limit.hashCode);
 
     return _SystemHash.finish(hash);
   }
@@ -166,6 +177,9 @@ mixin GetSortedExperianReportsRef
     on AutoDisposeProviderRef<List<CreditReport>> {
   /// The parameter `ascending` of this provider.
   bool get ascending;
+
+  /// The parameter `limit` of this provider.
+  int get limit;
 }
 
 class _GetSortedExperianReportsProviderElement
@@ -175,10 +189,12 @@ class _GetSortedExperianReportsProviderElement
 
   @override
   bool get ascending => (origin as GetSortedExperianReportsProvider).ascending;
+  @override
+  int get limit => (origin as GetSortedExperianReportsProvider).limit;
 }
 
 String _$latestExperianReportHash() =>
-    r'0650dca6e17f14626305d251eb97dcbe5832a643';
+    r'766a16611a22ba8011644453ceb5f39f9c07e38c';
 
 /// See also [latestExperianReport].
 @ProviderFor(latestExperianReport)
@@ -194,7 +210,7 @@ final latestExperianReportProvider = AutoDisposeProvider<CreditReport>.internal(
 
 typedef LatestExperianReportRef = AutoDisposeProviderRef<CreditReport>;
 String _$minReportedExperianScoreHash() =>
-    r'f6a372e72960e98d261ae04d255bde82456b01a2';
+    r'1054eaf333b4f76f318b688af872c11656e1b8ef';
 
 /// See also [minReportedExperianScore].
 @ProviderFor(minReportedExperianScore)
@@ -210,7 +226,7 @@ final minReportedExperianScoreProvider = AutoDisposeProvider<int>.internal(
 
 typedef MinReportedExperianScoreRef = AutoDisposeProviderRef<int>;
 String _$maxReportedExperianScoreHash() =>
-    r'9ba44f9704428cf227f77297e8bedcae27367134';
+    r'934f524d9d2adac0885ea946bb48a761b61a2dfc';
 
 /// See also [maxReportedExperianScore].
 @ProviderFor(maxReportedExperianScore)
@@ -225,5 +241,20 @@ final maxReportedExperianScoreProvider = AutoDisposeProvider<int>.internal(
 );
 
 typedef MaxReportedExperianScoreRef = AutoDisposeProviderRef<int>;
+String _$latestScoreDiffHash() => r'30cd8294d5132c376133ff34338b2afa5d2021da';
+
+/// See also [latestScoreDiff].
+@ProviderFor(latestScoreDiff)
+final latestScoreDiffProvider = AutoDisposeProvider<int>.internal(
+  latestScoreDiff,
+  name: r'latestScoreDiffProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$latestScoreDiffHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef LatestScoreDiffRef = AutoDisposeProviderRef<int>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

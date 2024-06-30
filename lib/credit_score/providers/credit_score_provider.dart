@@ -74,7 +74,7 @@ List<CreditReport> getExperianReports(GetExperianReportsRef ref) {
 
 @riverpod
 List<CreditReport> getSortedExperianReports(GetSortedExperianReportsRef ref,
-    {bool ascending = true}) {
+    {bool ascending = true, int limit = 12}) {
   final reports = ref.watch(getExperianReportsProvider);
 
   final sorted = reports.sortedBy(
@@ -89,7 +89,11 @@ List<CreditReport> getSortedExperianReports(GetSortedExperianReportsRef ref,
     },
   );
 
-  return sorted;
+  if (sorted.length > limit) {
+    return sorted;
+  }
+
+  return sorted.sublist(0, limit);
 }
 
 @riverpod
@@ -121,4 +125,19 @@ int maxReportedExperianScore(MaxReportedExperianScoreRef ref) {
       reports.sortedBy(compare: (a, b) => a.score.compareTo(b.score));
 
   return sorted.lastOrNull?.score ?? _kMaxCreditScore;
+}
+
+@riverpod
+int latestScoreDiff(LatestScoreDiffRef ref) {
+  final reports =
+      ref.watch(getSortedExperianReportsProvider(ascending: false, limit: 2));
+
+  if (reports.length != 2) {
+    return 0;
+  }
+
+  final latest = reports[0];
+  final previous = reports[1];
+
+  return latest.score - previous.score;
 }
