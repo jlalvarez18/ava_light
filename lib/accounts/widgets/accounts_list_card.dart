@@ -54,6 +54,22 @@ class _AccountWidgetState extends State<AccountWidget> {
     final percentFormatter = NumberFormat.percentPattern();
     final dateFormatter = DateFormat.yMMMMd();
 
+    final titleStyle = textTheme.titleLarge?.copyWith(
+      fontWeight: FontWeight.w600,
+      fontSize: 16,
+    );
+
+    final subtitleStyle = textTheme.titleLarge?.copyWith(
+      fontWeight: FontWeight.w400,
+      fontSize: 14,
+    );
+
+    final captionStyle = textTheme.titleLarge?.copyWith(
+      fontWeight: FontWeight.w400,
+      fontSize: 12,
+      color: Color.fromRGBO(115, 107, 124, 1),
+    );
+
     return VisibilityDetector(
       key: Key(widget.account.uid),
       onVisibilityChanged: (info) {
@@ -71,9 +87,11 @@ class _AccountWidgetState extends State<AccountWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(widget.account.name, style: textTheme.titleLarge),
-              Text(percentFormatter.format(widget.account.usagePercentage),
-                  style: textTheme.titleLarge),
+              Text(widget.account.name, style: titleStyle),
+              Text(
+                percentFormatter.format(widget.account.usagePercentage),
+                style: titleStyle,
+              ),
             ],
           ),
           TweenAnimationBuilder<double>(
@@ -91,15 +109,19 @@ class _AccountWidgetState extends State<AccountWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(widget.account.balance.toString(),
-                  style: textTheme.titleMedium),
-              Text("${widget.account.limit.toString()} Limit",
-                  style: textTheme.titleMedium),
+              Text(
+                widget.account.balance.toString(),
+                style: subtitleStyle,
+              ),
+              Text(
+                "${widget.account.limit.toString()} Limit",
+                style: subtitleStyle,
+              ),
             ],
           ),
           Text(
             "Reported on ${dateFormatter.format(widget.account.dateLastReported)}",
-            style: textTheme.labelSmall,
+            style: captionStyle,
           ),
         ],
       ),

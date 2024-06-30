@@ -32,12 +32,6 @@ class _CreditUtilizationHomeWidgetState
       color: Color.fromRGBO(42, 30, 57, 1),
     );
 
-    final subtitleStyle = textTheme.titleLarge?.copyWith(
-      fontWeight: FontWeight.w400,
-      fontSize: 14,
-      color: Color.fromRGBO(115, 107, 124, 1),
-    );
-
     final totalBalance = ref.watch(totalAccountBalanceProvider);
     final totalLimit = ref.watch(totalAccountLimitProvider);
 
