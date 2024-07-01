@@ -128,11 +128,11 @@ int maxReportedExperianScore(MaxReportedExperianScoreRef ref) {
 }
 
 @riverpod
-int latestScoreDiff(LatestScoreDiffRef ref) {
+int latestExperianScoreDiff(LatestExperianScoreDiffRef ref) {
   final reports =
       ref.watch(getSortedExperianReportsProvider(ascending: false, limit: 2));
 
-  if (reports.length != 2) {
+  if (reports.length < 2) {
     return 0;
   }
 

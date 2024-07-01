@@ -1,16 +1,20 @@
 import 'package:ava_light/core/theme/colors.dart';
 import 'package:ava_light/core/ui/spaced_column.dart';
+import 'package:ava_light/core/ui/spaced_row.dart';
 import 'package:ava_light/core/widgets/circular_progress_widget.dart';
 import 'package:ava_light/credit_score/models/credit_score.dart';
+import 'package:ava_light/credit_score/providers/credit_score_provider.dart';
+import 'package:ava_light/credit_score/widgets/score_diff_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CreditScoreHeader extends StatelessWidget {
-  const CreditScoreHeader({super.key, required this.report});
-
-  final CreditReport report;
+class CreditScoreHeader extends ConsumerWidget {
+  const CreditScoreHeader({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final report = ref.watch(latestExperianReportProvider);
+
     final textTheme = Theme.of(context).textTheme;
 
     final titleStyle = textTheme.titleLarge?.copyWith(
@@ -51,7 +55,13 @@ class CreditScoreHeader extends StatelessWidget {
                   spacing: 2,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Credit Score", style: titleStyle),
+                    SpacedRow(
+                      spacing: 8,
+                      children: [
+                        Text("Credit Score", style: titleStyle),
+                        ScoreDiffWidget(),
+                      ],
+                    ),
                     Text("Updated Today | Next UNKNOWN", style: subtitleStyle),
                   ],
                 ),

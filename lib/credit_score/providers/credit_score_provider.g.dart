@@ -241,20 +241,21 @@ final maxReportedExperianScoreProvider = AutoDisposeProvider<int>.internal(
 );
 
 typedef MaxReportedExperianScoreRef = AutoDisposeProviderRef<int>;
-String _$latestScoreDiffHash() => r'30cd8294d5132c376133ff34338b2afa5d2021da';
+String _$latestExperianScoreDiffHash() =>
+    r'9f5e50c878689f1b67b87e7e24572c9cc9ce367a';
 
-/// See also [latestScoreDiff].
-@ProviderFor(latestScoreDiff)
-final latestScoreDiffProvider = AutoDisposeProvider<int>.internal(
-  latestScoreDiff,
-  name: r'latestScoreDiffProvider',
+/// See also [latestExperianScoreDiff].
+@ProviderFor(latestExperianScoreDiff)
+final latestExperianScoreDiffProvider = AutoDisposeProvider<int>.internal(
+  latestExperianScoreDiff,
+  name: r'latestExperianScoreDiffProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$latestScoreDiffHash,
+      : _$latestExperianScoreDiffHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef LatestScoreDiffRef = AutoDisposeProviderRef<int>;
+typedef LatestExperianScoreDiffRef = AutoDisposeProviderRef<int>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

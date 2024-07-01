@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:after_layout/after_layout.dart';
 import 'package:ava_light/core/theme/colors.dart';
 import 'package:ava_light/core/ui/spaced_column.dart';
+import 'package:ava_light/core/ui/spaced_row.dart';
 import 'package:ava_light/core/widgets/card_widget.dart';
 import 'package:ava_light/credit_score/models/credit_score.dart';
 import 'package:ava_light/credit_score/providers/credit_score_provider.dart';
+import 'package:ava_light/credit_score/widgets/score_diff_widget.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,7 +70,13 @@ class _HeaderWidget extends StatelessWidget {
     return SpacedColumn(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text("Credit Score", style: titleStyle),
+        SpacedRow(
+          spacing: 8,
+          children: [
+            Text("Credit Score", style: titleStyle),
+            ScoreDiffWidget(),
+          ],
+        ),
         Text("Updated Today • Next $dateString", style: subtitleStyle),
       ],
     );
@@ -76,11 +84,12 @@ class _HeaderWidget extends StatelessWidget {
 }
 
 class _ChartWidget extends StatefulWidget {
-  _ChartWidget(
-      {super.key,
-      required this.reports,
-      required this.minY,
-      required this.maxY});
+  _ChartWidget({
+    super.key,
+    required this.reports,
+    required this.minY,
+    required this.maxY,
+  });
 
   final List<CreditReport> reports;
   final double minY;
