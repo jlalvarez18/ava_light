@@ -242,7 +242,7 @@ final maxReportedExperianScoreProvider = AutoDisposeProvider<int>.internal(
 
 typedef MaxReportedExperianScoreRef = AutoDisposeProviderRef<int>;
 String _$latestExperianScoreDiffHash() =>
-    r'9f5e50c878689f1b67b87e7e24572c9cc9ce367a';
+    r'b840b53c2e6a5c7a64453ac0b53801b5454fc8fd';
 
 /// See also [latestExperianScoreDiff].
 @ProviderFor(latestExperianScoreDiff)

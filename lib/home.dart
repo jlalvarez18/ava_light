@@ -6,6 +6,7 @@ import 'package:ava_light/credit_factors/providers/credit_factors_provider.dart'
 import 'package:ava_light/credit_factors/widgets/credit_factors_list_widget.dart';
 import 'package:ava_light/credit_score/widgets/credit_score_header.dart';
 import 'package:ava_light/credit_score/widgets/credit_score_home_widget.dart';
+import 'package:ava_light/user_info/widgets/employment_infomation_page.dart';
 import 'package:ava_light/utilization/credit_utilization_home_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -66,7 +67,14 @@ class Home extends ConsumerWidget {
               ),
             ),
             leading: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                final route = MaterialPageRoute(
+                  fullscreenDialog: true,
+                  builder: (context) => EmploymentInfomationPage(),
+                );
+
+                Navigator.of(context).push(route);
+              },
               icon: Icon(Icons.settings_outlined),
             ),
           ),
