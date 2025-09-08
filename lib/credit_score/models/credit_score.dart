@@ -1,9 +1,10 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
 const int kMaxScoreRating = 850;
 
 @immutable
-final class CreditReport {
+final class CreditReport extends Equatable {
   final DateTime dateReported;
   final int score;
   final CreditReportAgency agency;
@@ -30,6 +31,9 @@ final class CreditReport {
         return CreditScoreRating.unknown;
     }
   }
+
+  @override
+  List<Object?> get props => [dateReported, score, agency];
 }
 
 enum CreditReportAgency {
