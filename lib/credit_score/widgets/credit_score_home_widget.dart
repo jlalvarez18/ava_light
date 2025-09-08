@@ -12,6 +12,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class CreditScoreHomeWidget extends ConsumerWidget {
   const CreditScoreHomeWidget({super.key});
@@ -99,12 +100,18 @@ class _ChartWidget extends StatefulWidget {
   State<_ChartWidget> createState() => _ChartWidgetState();
 }
 
-class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
+class _ChartWidgetState extends State<_ChartWidget>
+    with AfterLayoutMixin, AutomaticKeepAliveClientMixin {
   List<FlSpot> spots = [];
   int x = 1;
 
   late double minY;
   late double maxY;
+
+  bool _hasAnimated = false;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -142,6 +149,8 @@ class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     final barData = loadBarData();
 
     final data = LineChartData(
@@ -173,20 +182,29 @@ class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
           color: AvaColors.purple,
         );
 
-    return SpacedColumn(
-      spacing: 20,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(widget.reports.first.agency.string, style: titleStyle),
-        SizedBox(
-          height: 100,
-          child: LineChart(
-            data,
-            duration: Duration(seconds: 1),
-            curve: Curves.easeInOut,
+    return VisibilityDetector(
+      key: Key("credit-score-chart-widget"),
+      onVisibilityChanged: (info) {
+        final visiblePercentage = info.visibleFraction * 100;
+        if (visiblePercentage >= 90 && !_hasAnimated) {
+          _hasAnimated = true;
+        }
+      },
+      child: SpacedColumn(
+        spacing: 20,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(widget.reports.first.agency.string, style: titleStyle),
+          SizedBox(
+            height: 100,
+            child: LineChart(
+              data,
+              duration: !_hasAnimated ? Duration(seconds: 1) : Duration.zero,
+              curve: Curves.easeInOut,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -235,8 +253,7 @@ class _ChartWidgetState extends State<_ChartWidget> with AfterLayoutMixin {
     ];
   }
 
-  Widget getLeftTitleWidget(
-      BuildContext context, double value, TitleMeta meta) {
+  Widget getLeftTitleWidget(BuildContext context, double value, TitleMeta meta) {
     final style = Theme.of(context).textTheme.labelLarge?.copyWith(
           fontWeight: FontWeight.bold,
           fontSize: 10,

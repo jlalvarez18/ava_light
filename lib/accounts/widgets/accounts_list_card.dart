@@ -43,11 +43,40 @@ class AccountWidget extends StatefulWidget {
   State<AccountWidget> createState() => _AccountWidgetState();
 }
 
-class _AccountWidgetState extends State<AccountWidget> {
-  double progressValue = 0.0;
+class _AccountWidgetState extends State<AccountWidget>
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+  bool _hasAnimated = false;
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: Duration(seconds: 1),
+      vsync: this,
+    );
+    _animation = Tween<double>(
+      begin: 0.0,
+      end: widget.account.usagePercentage,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Required for AutomaticKeepAliveClientMixin
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
@@ -74,10 +103,9 @@ class _AccountWidgetState extends State<AccountWidget> {
       key: Key(widget.account.uid),
       onVisibilityChanged: (info) {
         final visiblePercentage = info.visibleFraction * 100;
-        if (visiblePercentage >= 90) {
-          setState(() {
-            progressValue = widget.account.usagePercentage;
-          });
+        if (visiblePercentage >= 90 && !_hasAnimated) {
+          _hasAnimated = true;
+          _animationController.forward();
         }
       },
       child: SpacedColumn(
@@ -94,12 +122,11 @@ class _AccountWidgetState extends State<AccountWidget> {
               ),
             ],
           ),
-          TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0, end: progressValue),
-            duration: Duration(seconds: 1),
-            builder: (context, value, child) {
+          AnimatedBuilder(
+            animation: _animation,
+            builder: (context, child) {
               return LinearProgressIndicator(
-                value: value,
+                value: _animation.value,
                 minHeight: 8,
                 borderRadius: BorderRadius.circular(999),
                 valueColor: AlwaysStoppedAnimation(AvaColors.green),

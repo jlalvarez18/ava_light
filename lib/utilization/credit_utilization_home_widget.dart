@@ -14,16 +14,20 @@ class CreditUtilizationHomeWidget extends ConsumerStatefulWidget {
   const CreditUtilizationHomeWidget({super.key});
 
   @override
-  ConsumerState<CreditUtilizationHomeWidget> createState() =>
-      _CreditUtilizationHomeWidgetState();
+  ConsumerState<CreditUtilizationHomeWidget> createState() => _CreditUtilizationHomeWidgetState();
 }
 
-class _CreditUtilizationHomeWidgetState
-    extends ConsumerState<CreditUtilizationHomeWidget> {
+class _CreditUtilizationHomeWidgetState extends ConsumerState<CreditUtilizationHomeWidget>
+    with AutomaticKeepAliveClientMixin {
   double progressValue = 0.0;
+  bool _hasAnimated = false;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Required for AutomaticKeepAliveClientMixin
     final textTheme = Theme.of(context).textTheme;
 
     final titleStyle = textTheme.titleLarge?.copyWith(
@@ -43,9 +47,10 @@ class _CreditUtilizationHomeWidgetState
       key: Key("credit-utilization-card"),
       onVisibilityChanged: (info) {
         final visiblePercentage = info.visibleFraction * 100;
-        if (visiblePercentage >= 80) {
+        if (visiblePercentage >= 80 && !_hasAnimated) {
           setState(() {
             progressValue = utilizationReport.ratio;
+            _hasAnimated = true;
           });
         }
       },
@@ -59,11 +64,13 @@ class _CreditUtilizationHomeWidgetState
               style: titleStyle,
             ),
             CircularProgressWidget(
-              progressValue: progressValue,
+              key: Key('credit-utilitzation-card-progress'),
+              progressValue: utilizationReport.ratio,
               maxValue: 1.0,
               title: percentFormatter.format(utilizationReport.ratio),
               subtitle: utilizationReport.grade.stringValue,
               style: CircularProgressStyle.semi,
+              animateOnce: true,
             ),
             Column(
               children: [

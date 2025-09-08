@@ -69,10 +69,12 @@ class CreditScoreHeader extends ConsumerWidget {
               ],
             ),
             CircularProgressWidget(
+              key: Key('credit-score-header'),
               progressValue: report.score.toDouble(),
               title: report.score.toString(),
               subtitle: report.rating.string,
               maxValue: kMaxScoreRating.toDouble(),
+              animateOnce: true,
             ),
           ],
         ),
